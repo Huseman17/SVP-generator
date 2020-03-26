@@ -2,7 +2,8 @@
 
 import math
 import matplotlib.pyplot as plt
-from tkinter.filedialog import askopenfilename()
+import easygui
+import os
 
 
 # Calculates:   Surface Gravity(m/s)
@@ -39,7 +40,9 @@ def graph(graph_points):
 
 
 def main():
-    sound_vel_dat = open('20200315_28196.000')
+    sound_vel_dat = open(easygui.fileopenbox('Choose CTD data.', None, None, '.000'))
+
+    # sound_vel_dat = open('20200315_28196.000')
     dat_lines = sound_vel_dat.readlines()
     latitude = 28.46
     pressure = 1977.757
@@ -48,6 +51,7 @@ def main():
     site = dat_lines[4].split()[3]
     surface_gravity = calc_surface_gravity(latitude)
     sonardyne_pro = open('%s.pro' % fn, 'w')
+
     sonardyne_pro.write(site)
     sonardyne_pro.write('\n')
     depth_dup_check = 0  # depth_dup_check checks for duplicate pressure readings
@@ -80,6 +84,7 @@ def main():
         depth_dup_check = depth
         profile_check += 1
 
+    easygui.filesavebox('Choose save location.', None, fn + '.pro')
     sonardyne_pro.close()
 
     print('\nREPORT')
